@@ -1,0 +1,8 @@
+android {
+
+    defaultConfig {
+
+        buildConfigField "int", "DB_SCHEMA_VERSION", "1"
+        buildConfigField "String", "API_KEY", "HELLO_WORLD"
+    }
+}
