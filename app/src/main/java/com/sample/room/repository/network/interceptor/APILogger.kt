@@ -18,8 +18,8 @@ class APILogger : Interceptor {
 
         // print the request
         Timber.d("**********************       REQUEST INITATED     **********************")
-        Timber.d("REQUEST URL -> %s", request.url())
-        Timber.d("REQUEST HEADERS -> %s", request.headers())
+        Timber.d("REQUEST URL -> ${request.url()}")
+        Timber.d("REQUEST HEADERS -> ${request.headers()}")
         Timber.d("**********************       REQUEST FINISHED     **********************")
 
         // generate the response
@@ -27,8 +27,8 @@ class APILogger : Interceptor {
 
         // print the response
         Timber.d("**********************       RESPONSE INITIATED     **********************")
-        Timber.d("RESPONSE CODE -> %s", response.code())
-        Timber.d("RESPONSE HEADERS -> %s", response.headers())
+        Timber.d("RESPONSE CODE -> ${response.code()}")
+        Timber.d("RESPONSE HEADERS ->  ${response.headers()}")
         Timber.d("**********************       RESPONSE FINISHED     **********************")
 
         // returning the response object

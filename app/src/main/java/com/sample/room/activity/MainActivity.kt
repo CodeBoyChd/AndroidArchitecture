@@ -3,19 +3,15 @@ package com.sample.room.activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
-import butterknife.OnClick
 import com.sample.room.R
+import com.sample.room.adapter.PopularMoviesListAdapter
 import com.sample.room.factory.MainActivityFactory
-import com.sample.room.repository.database.entity.EventEntity
 import com.sample.room.viewModel.MainActivityViewModel
-import dagger.android.AndroidInjection
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
@@ -23,21 +19,13 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var mainActivityFactory: MainActivityFactory
 
-    @BindView(R.id.etName)
-    lateinit var nameET: EditText
-
-    @BindView(R.id.etDescription)
-    lateinit var descET: EditText
-
-    @BindView(R.id.btnSubmit)
-    lateinit var btnSubmit: Button
+    @BindView(R.id.recyclerView)
+    lateinit var recyclerView: RecyclerView
 
     lateinit var mainActivityViewModel: MainActivityViewModel
+    lateinit var adapter: PopularMoviesListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        // android injection
-        AndroidInjection.inject(this)
 
         super.onCreate(savedInstanceState)
 
@@ -45,25 +33,24 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
 
+        // set up view model
         mainActivityViewModel = ViewModelProviders.of(this, mainActivityFactory).get(MainActivityViewModel::class.java)
-        mainActivityViewModel.getEvents().observe(this,
-                Observer { t -> Timber.d("Something changed..WOW!!!!") })
+        mainActivityViewModel.getPopularMoviesLiveData().observe(this,
+                Observer { t ->
+                    Timber.d("Popular movies data has been updated")
+                    adapter.updatePopularMovies(t)
+                })
 
-        // get all the events and display
-        mainActivityViewModel.getAllEvents()
-        Timber.d("Get all the events SIZE: %s", mainActivityViewModel.getEvents().value?.size)
-    }
+        // set up adapter
+        adapter = PopularMoviesListAdapter(ArrayList(), this)
 
-    @OnClick(R.id.btnSubmit)
-    fun onViewClicked(view: View) {
+        // set up the recycler view
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = adapter
 
-        when (view.id) {
-            R.id.btnSubmit -> {
-                Timber.d("Submit button for event generated")
-                val eventEntity = EventEntity(0, nameET.text.toString(), descET.text.toString(), Date())
-                mainActivityViewModel.addEvent(eventEntity)
-            }
-        }
+        // get all the popular movies listing
+        mainActivityViewModel.getPopularMoviesFromServer()
     }
 }
 

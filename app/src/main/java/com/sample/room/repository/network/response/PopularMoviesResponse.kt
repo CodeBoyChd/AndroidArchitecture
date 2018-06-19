@@ -2,7 +2,7 @@ package com.sample.room.repository.network.response
 
  data class PopularMoviesResponse(val page: Int,
                                  val total_pages: Int,
-                                 val popularMovieDto: ArrayList<PopularMovieDTO>)
+                                 val results: ArrayList<PopularMovieDTO>)
 
 data class PopularMovieDTO(val id: Long,
                            val video: Boolean,

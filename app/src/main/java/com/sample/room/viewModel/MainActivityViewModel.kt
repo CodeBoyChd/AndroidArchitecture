@@ -4,12 +4,14 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.sample.room.repository.MyRepository
 import com.sample.room.repository.database.entity.EventEntity
+import com.sample.room.repository.network.response.PopularMovieDTO
 import com.sample.room.schedulers.BaseSchedulerProvider
 import timber.log.Timber
 
 class MainActivityViewModel(repository: MyRepository, schedulerProvider: BaseSchedulerProvider) :
         BaseViewModel(repository, schedulerProvider) {
-    private val eventLiveData = MutableLiveData<List<EventEntity>>()
+    private val eventLiveData = MutableLiveData<ArrayList<EventEntity>>()
+    private val popularMoviesLiveData = MutableLiveData<ArrayList<PopularMovieDTO>>()
 
     /**
      * add event in the database
@@ -24,34 +26,23 @@ class MainActivityViewModel(repository: MyRepository, schedulerProvider: BaseSch
                         { throwable -> Timber.d("Event has not been saved") }))
     }
 
-    /**
-     * get all the events from the database
-     */
-    fun getAllEvents() {
-        Timber.d("get all events")
-        compositeDisposable.add(myRepository.getAllEvents()
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribe({ data ->
-                    Timber.d("Received Data from DB")
-                    eventLiveData.postValue(data.value)
-                }, { t -> Timber.d("Error while getting events: %s", t.localizedMessage) }))
-    }
+    // fetch the latest popular movies from server
+    fun getPopularMoviesFromServer() {
+        Timber.d("Get Popular Movies from Server")
 
-    /**
-     * get the events
-     */
-    fun getEvents(): LiveData<List<EventEntity>> {
-        Timber.d("get events")
-        return eventLiveData
-    }
-
-    fun getPopularMovies() {
-        setIsLoading(true)
+        //send the data and
         compositeDisposable.add(myRepository
                 .getPopularMovies()
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribe())
+                .subscribe({ t ->
+                    Timber.d("PopularMovies DTO: ${t.results}")
+                    popularMoviesLiveData.postValue(t.results)
+                }, { t -> Timber.d("Something went wrong") }))
+    }
+
+    // get the live data for the list of popular movies
+    fun getPopularMoviesLiveData(): LiveData<ArrayList<PopularMovieDTO>> {
+        return popularMoviesLiveData
     }
 }

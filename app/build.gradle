@@ -21,7 +21,7 @@ android {
     kapt {
         generateStubs = true
     }
-    dataBinding{
+    dataBinding {
         enabled = true
     }
 }
@@ -60,11 +60,11 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
 
     // retrofit with rx java
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
 
     // butterknife
@@ -74,6 +74,9 @@ dependencies {
     // picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'jp.wasabeef:picasso-transformations:2.2.1'
+
+    // recycler view
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
 }
 
 repositories {

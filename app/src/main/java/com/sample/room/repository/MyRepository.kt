@@ -8,6 +8,7 @@ import com.sample.room.repository.network.response.PopularMoviesResponse
 import com.sample.room.scope.ApplicationScope
 import io.reactivex.Observable
 import io.reactivex.Single
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -34,6 +35,7 @@ class MyRepository @Inject constructor(private val dbHelper: DbHelper,
      * get popular mvovies data
      */
     fun getPopularMovies(): Single<PopularMoviesResponse> {
+        Timber.d("Get popular movies")
         return networkHelper.getPopularMovies()
     }
 }
