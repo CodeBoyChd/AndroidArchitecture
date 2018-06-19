@@ -2,10 +2,11 @@ package com.sample.room.repository
 
 import android.arch.lifecycle.LiveData
 import com.sample.room.repository.database.DbHelper
-import com.sample.room.repository.database.entity.EventEntity
+import com.sample.room.repository.database.entity.PopularMovieDTO
 import com.sample.room.repository.network.NetworkHelper
 import com.sample.room.repository.network.response.PopularMoviesResponse
 import com.sample.room.scope.ApplicationScope
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import timber.log.Timber
@@ -20,20 +21,25 @@ import javax.inject.Inject
 class MyRepository @Inject constructor(private val dbHelper: DbHelper,
                                        private val networkHelper: NetworkHelper) {
 
-    /**
-     * save the event in the database
-     */
-    fun saveEvent(eventEntity: EventEntity): Observable<Boolean> {
-        return dbHelper.addEvent(eventEntity)
+    // add favourite movie in database
+    fun addFavouriteMovie(popularMovieDTO: PopularMovieDTO): Completable {
+        Timber.d("Add favourite movie")
+        return dbHelper.addFavouriteMovie(popularMovieDTO)
     }
 
-    fun getAllEvents(): Observable<LiveData<List<EventEntity>>> {
-        return dbHelper.getAllEvents()
+    // remove favourite movie from database
+    fun removeFavouriteMovie(popularMovieDTO: PopularMovieDTO): Completable {
+        Timber.d("Remove favourite movie")
+        return dbHelper.removeFavouriteMovie(popularMovieDTO)
     }
 
-    /**
-     * get popular mvovies data
-     */
+    // get all the favourite movies from database
+    fun getFavouriteMoviesFromDB(): Observable<LiveData<List<PopularMovieDTO>>> {
+        Timber.d("Get popular movies")
+        return dbHelper.getAllFavouriteMovies()
+    }
+
+    // get popular movies data from server
     fun getPopularMovies(): Single<PopularMoviesResponse> {
         Timber.d("Get popular movies")
         return networkHelper.getPopularMovies()

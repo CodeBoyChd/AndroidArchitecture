@@ -7,14 +7,16 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.sample.room.FavouriteIconClickListener
 import com.sample.room.R
 import com.sample.room.adapter.PopularMoviesListAdapter
 import com.sample.room.factory.MainActivityFactory
+import com.sample.room.repository.database.entity.PopularMovieDTO
 import com.sample.room.viewModel.MainActivityViewModel
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), FavouriteIconClickListener {
 
     @Inject
     lateinit var mainActivityFactory: MainActivityFactory
@@ -42,7 +44,7 @@ class MainActivity : BaseActivity() {
                 })
 
         // set up adapter
-        adapter = PopularMoviesListAdapter(ArrayList(), this)
+        adapter = PopularMoviesListAdapter(ArrayList(), this, this)
 
         // set up the recycler view
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -51,6 +53,16 @@ class MainActivity : BaseActivity() {
 
         // get all the popular movies listing
         mainActivityViewModel.getPopularMoviesFromServer()
+    }
+
+    override fun onFavouriteIconClicked(makeFavourite: Boolean, popularMovieDTO: PopularMovieDTO) {
+        Timber.d("Favourite Icon Clicked: Adding: $makeFavourite")
+
+        if (makeFavourite) {
+            mainActivityViewModel.addFavouriteMovie(popularMovieDTO)
+        } else {
+            mainActivityViewModel.removeFavouriteMovie(popularMovieDTO)
+        }
     }
 }
 

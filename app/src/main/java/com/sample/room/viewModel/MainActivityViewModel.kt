@@ -3,32 +3,39 @@ package com.sample.room.viewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.sample.room.repository.MyRepository
-import com.sample.room.repository.database.entity.EventEntity
-import com.sample.room.repository.network.response.PopularMovieDTO
+import com.sample.room.repository.database.entity.PopularMovieDTO
 import com.sample.room.schedulers.BaseSchedulerProvider
 import timber.log.Timber
 
 class MainActivityViewModel(repository: MyRepository, schedulerProvider: BaseSchedulerProvider) :
         BaseViewModel(repository, schedulerProvider) {
-    private val eventLiveData = MutableLiveData<ArrayList<EventEntity>>()
     private val popularMoviesLiveData = MutableLiveData<ArrayList<PopularMovieDTO>>()
 
-    /**
-     * add event in the database
-     */
-    fun addEvent(eventEntity: EventEntity) {
-        Timber.d("Add Event")
+    //add favourite movie in the database
+    fun addFavouriteMovie(popularMovieDTO: PopularMovieDTO) {
+        Timber.d("Add favourite movie")
         compositeDisposable.add(myRepository
-                .saveEvent(eventEntity)
+                .addFavouriteMovie(popularMovieDTO)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribe({ aBoolean -> Timber.d("Event has been saved") },
-                        { throwable -> Timber.d("Event has not been saved") }))
+                .subscribe({ Timber.d("onSuccess: Favourite movie added") },
+                        { t -> Timber.d("Issue while adding in database: $t") }))
+    }
+
+    // remove favourite movie from database
+    fun removeFavouriteMovie(popularMovieDTO: PopularMovieDTO) {
+        Timber.d("Remove favourite movie")
+        compositeDisposable.add(myRepository
+                .removeFavouriteMovie(popularMovieDTO)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe({ Timber.d("onSuccess: Favourite movie removed") },
+                        { t -> Timber.d("Issue while removing from database: $t") }))
     }
 
     // fetch the latest popular movies from server
     fun getPopularMoviesFromServer() {
-        Timber.d("Get Popular Movies from Server")
+        Timber.d("Get popular movies from server")
 
         //send the data and
         compositeDisposable.add(myRepository

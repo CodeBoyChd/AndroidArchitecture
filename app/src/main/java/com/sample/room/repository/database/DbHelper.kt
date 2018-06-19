@@ -1,18 +1,15 @@
 package com.sample.room.repository.database
 
 import android.arch.lifecycle.LiveData
-import com.sample.room.repository.database.entity.EventEntity
+import com.sample.room.repository.database.entity.PopularMovieDTO
+import io.reactivex.Completable
 import io.reactivex.Observable
 
 interface DbHelper {
 
-    fun getAllEvents(): Observable<LiveData<List<EventEntity>>>
+    fun addFavouriteMovie(popularMovieDTO: PopularMovieDTO): Completable
 
-    fun addEvent(event: EventEntity): Observable<Boolean>
+    fun removeFavouriteMovie(popularMovieDTO: PopularMovieDTO): Completable
 
-    fun deleteEvent(event: EventEntity)
-
-    fun deleteAllEvents()
-
-    fun updateEvent(event: EventEntity)
+    fun getAllFavouriteMovies(): Observable<LiveData<List<PopularMovieDTO>>>
 }

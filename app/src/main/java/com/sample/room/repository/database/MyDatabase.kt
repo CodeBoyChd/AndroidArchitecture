@@ -3,8 +3,8 @@ package com.sample.room.repository.database
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
-import com.sample.room.repository.database.dao.EventDao
-import com.sample.room.repository.database.entity.EventEntity
+import com.sample.room.repository.database.dao.PopularMoviesDao
+import com.sample.room.repository.database.entity.PopularMovieDTO
 import com.sample.room.typeConverter.TypeConverter
 
 
@@ -18,9 +18,9 @@ import com.sample.room.typeConverter.TypeConverter
 // defintion for the database having the version and also the entities with type
 // converters if required
 
-@Database(entities = arrayOf(EventEntity::class), version = 1)
+@Database(entities = arrayOf(PopularMovieDTO::class), version = 1)
 @TypeConverters(TypeConverter::class)
 abstract class MyDatabase : RoomDatabase() {
 
-    abstract fun eventDao(): EventDao
+    abstract fun popularMoviesDao(): PopularMoviesDao
 }
